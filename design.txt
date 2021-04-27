@@ -1,0 +1,10 @@
+
+I store bank accounts into a dynamic sorted array and use a binary
+search to quickly search through them. I chose a dynamic sorted array
+so that the array is only as large as the current number of
+elements. I chose to sort it so that I could use a binary search.
+Doing this makes it harder to add new accounts, but it is space-efficient
+and quick to search through. I figured that the typical bank would put
+more emphasis on searching through accounts than adding or removing bank 
+accounts. I did not, however, add a remove() method to my dynamic array
+because it was not required in this lab. 

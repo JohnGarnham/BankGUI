@@ -1,0 +1,65 @@
+ATM Protocol
+
+The ATM works with the BankServer in a very straightforward way:
+1. The ATM connects to the BankServer.
+2. The user chooses an operation at the ATM.
+3. If the operation chosen was quit, we jump to step 7.
+4. The operation is packaged into a message and sent to the BankServer.
+5. The Bank responds with a message indicating either success or failure.
+6. The cycle repeats at step 2.
+7. The ATM disconnects from the BankServer.
+
+Note that the ATM reconnects every time a new customer begins to
+use the machine.
+
+The Bank interface has four operations:
+- validate, getBalance, deposit, and withdraw.
+
+Here is how they work.
+
+VALIDATE
+Customer walks up to the ATM and punches in an account number.
+Number is sent to bank for validation. If it does not check
+out, the customer is dismissed and the ATM goes back to its
+initial state.
+
+GET_BALANCE
+Customer requests current balance. Request is forwarded to
+the bank, which will return the balance.
+
+DEPOSIT
+Customer requests deposit. ATM prompts customer for amount.
+Customer enters amount. ATM waits for currency to be inserted
+(simulated with a button). Customer enters currency. ATM sends
+deposit request to bank. Bank replies. (ATM should warn
+customer that deposits are subject to verification.)
+
+WITHDRAW
+Customer requests withdrawal. ATM prompts customer for amount.
+Customer enters amount. ATM sends withdrawal request to bank.
+Bank replies. ATM spits out currency (simulated somewhere in
+the display).
+
+If there are any errors during the transaction, they will be
+reported to the customer.
+
+The software local to the client (ATM) side believes it is talking to
+the actual Bank object, when in reality it is talking to a "proxy" that
+packages the request into a message and sends it to another program,
+a "dispatcher", that decodes the message and calls a method in the
+true Bank implementation.
+
+Each operation is sent in a BankingMessage object along with the account
+number and amount, if any, that are involved. This happens at step 4.
+
+If for any reason the bank is unable to fulfill the request (bad account number,
+insufficient funds, ...) a FAILURE_RESPONSE is returned at step 5. The proxy
+for the bank on the client (ATM) side will raise a ValidationException in
+response to this.
+
+If anything goes awry in the communication itself, the proxy will raise a
+CommunicationsException.
+
+If everything goes well, the returned message type will be SUCCESS_RESPONSE,
+the account number will be unchanged from the original request message, and
+the amount in the message will be the account's (new) balance.
