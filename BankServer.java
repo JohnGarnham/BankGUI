@@ -87,6 +87,21 @@ public class BankServer extends Thread {
 
         // Set what the servers port number is
         this.port = port;
+       
+        try {
+        	if(port < 1 || port > 65000) {
+        		throw new IOException("Invalid port: " + port);
+        	}
+
+            server = new ServerSocket(port);
+
+        } catch (IOException e) {
+            System.err.println("Could not create server: " + 
+                               e.getMessage() );
+            System.exit(0);
+
+        }
+        
 
         // Set up the bank accounts
         
@@ -126,16 +141,6 @@ public class BankServer extends Thread {
 
         }
 
-        try {
-
-            server = new ServerSocket(port);
-
-        } catch (IOException e) {
-
-            System.err.println("Could not create server: " + 
-                               e.getMessage() );
-
-        }
 
         System.out.println("Server has been started on port #" + port);
 
