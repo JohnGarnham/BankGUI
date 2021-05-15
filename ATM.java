@@ -197,7 +197,7 @@ public class ATM extends JFrame implements ActionListener {
         try {
             
             if (args.length != 2) {
-                throw new Exception("java ATM bankserver port");
+                throw new Exception("Invalid arguments: java ATM bankserver port");
             }
 
             String host = args[0];
